@@ -68,7 +68,6 @@ class ProductController extends Controller
             'category_id'   => 'required',
             'unit_id'       => 'required'
         ]);
-
         $product->update($request->all());
 
         return redirect()->route('products.index')->with('message', 'Product Update Successful');

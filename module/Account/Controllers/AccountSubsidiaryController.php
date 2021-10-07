@@ -36,7 +36,6 @@ class AccountSubsidiaryController extends Controller
         $this->hasAccess("account.subsidiaries.create");
 
         $data = $this->dataService->getAccountData(['accountGroups']);
-
         $data['accountControls'] = [];
 
         return view('setup.account-subsidiaries.create', $data);
@@ -80,7 +79,7 @@ class AccountSubsidiaryController extends Controller
     public function destroy($id): RedirectResponse
     {
         $this->hasAccess("account.subsidiaries.delete");
-
+        
         AccountSubsidiary::query()->where('id', $id)->delete();
 
         return redirect()->route('account-subsidiaries.index')->with('message', 'Account Subsidiary Delete Successful');

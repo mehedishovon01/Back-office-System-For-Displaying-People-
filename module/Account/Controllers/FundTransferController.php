@@ -54,16 +54,12 @@ class FundTransferController extends Controller
         $this->hasAccess("fund.transfers.create");
 
         $this->validateData($request);
-
         try {
             DB::beginTransaction();
-
             $transfer = FundTransfer::query()->create($request->all());
-
             $transfer->update([
                 'invoice_no' => $this->invoiceNumberService->getFundTransferInvoiceNo($transfer->company_id),
             ]);
-
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
@@ -80,9 +76,7 @@ class FundTransferController extends Controller
         $fundTransfer->update([
             'is_approved' => 1
         ]);
-
         $this->transactionService->storeFundTransfer($fundTransfer);
-
         $this->invoiceNumberService->setNextInvoiceNo($fundTransfer->company_id, 'Fund Transfer', date('Y'));
 
         return redirect()->route('fund-transfers.index')->with('message', 'Fund Transfer Approved Successfully!');
@@ -102,13 +96,11 @@ class FundTransferController extends Controller
         $this->hasAccess("fund.transfers.edit");
 
         $this->validateData($request);
-
         try {
             DB::beginTransaction();
 
 //            $from_account_id = $fundTransfer->from_account_id;
 //            $to_account_id = $fundTransfer->to_account_id;
-
             $fundTransfer->where('id', $fundTransfer->id)->update($request->except(['_token', '_method']));
 //            $fundTransfer->refresh();
 //
@@ -125,7 +117,6 @@ class FundTransferController extends Controller
 //                    'amount' => $fundTransfer->amount,
 //                    'balance_type' => $fundTransfer->toAccount->balance_type
 //                ]);
-
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();

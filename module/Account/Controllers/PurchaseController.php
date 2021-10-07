@@ -32,6 +32,7 @@ class PurchaseController extends Controller
     public function index()
     {
         $this->hasAccess("acc_purchases.index");
+
         $purchase = Purchase::latest()->get();
 
         return view('purchase.purchases.index', compact('purchase'));
@@ -40,10 +41,12 @@ class PurchaseController extends Controller
     public function create()
     {
         $this->hasAccess("acc_purchases.create");
+
         $products = Product::select('id','name', 'purchase_price')->get();
         $customer = Customer::select('id','name')->get();
         $company = Company::select('id','name')->get();
         // return $company;
+
         return view('purchase.purchases.create', compact('products', 'customer', 'company'));
     }
 
@@ -53,7 +56,6 @@ class PurchaseController extends Controller
         $this->hasAccess("acc_purchases.create");
         try{
             DB::beginTransaction();
-
             $purchase = Purchase::query()->create([
                 'date' => $request->date,
                 'customer_id' => $request->customer_id,
@@ -62,7 +64,6 @@ class PurchaseController extends Controller
                 'previous_due' => $request->previous_due,
                 'payable_amount' => $request->payable_amount
             ]);
-
             $purchase->update([
                 'invoice_no' => $this->invoiceNumberService->getPurchaseInvoiceNo($purchase->company_id),
             ]);
@@ -110,14 +111,12 @@ class PurchaseController extends Controller
     {
         $this->hasAccess("acc_purchases.edit");
 
-
         return view('purchase.purchases.edit');
     }
 
     public function update(Request $request, Purchase $purchase): RedirectResponse
     {
         $this->hasAccess("acc_purchases.edit");
-
 
         return redirect()->route('acc_purchases.index')->with('message', 'Purchase Update Successful');
     }
@@ -129,7 +128,7 @@ class PurchaseController extends Controller
 
         try {
             Purchase ::destroy($id);
-
+            
             return redirect()->route('acc_purchases.index')->with('message', 'Purchase Successfully Deleted!');
         } catch (\Exception $ex) {
             return redirect()->back()->withMessage($ex->getMessage());

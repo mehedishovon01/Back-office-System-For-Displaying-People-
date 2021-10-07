@@ -42,7 +42,6 @@ class AccountReportController extends Controller
 
         $data1 = $this->dataService->getAccountData(['accounts']);
         $data2 = $this->reportService->getLedger($request);
-
         $view = 'reports.account-ledger.' . ($request->print ? 'print' : 'index');
 
         return view($view, $data1, $data2);
@@ -54,9 +53,9 @@ class AccountReportController extends Controller
         $this->hasAccess("account.transaction.ledger.reports");
 
         $accountGroups = $this->transactionLedger->getCategoryWiseTransactionLedgerReportData($request);
-
         $view = 'reports.transaction-ledger.category-' . ($request->print ? 'print' : 'index');
         // dd(DB::getQueryLog());
+
         return view($view, compact('accountGroups'));
     }
 
@@ -66,7 +65,6 @@ class AccountReportController extends Controller
 
         $data = $this->dataService->getAccountData(['accounts']);
         $data2 = $this->journalLedger->getLedger($request);
-
         $view = 'reports.ledger-journal.' . ($request->print ? 'print' : 'index');
 
         return view($view, $data, $data2);
@@ -78,7 +76,6 @@ class AccountReportController extends Controller
 
         $data = $this->dataService->getAccountData(['accountSubsidiaries']);
         $data2 = $this->subsidiaryLedger->getLedger($request);
-
         $view = 'reports.subsidiary-wise-ledger.' . ($request->print ? 'print' : 'index');
 
         return view($view, $data, $data2);
@@ -109,7 +106,6 @@ class AccountReportController extends Controller
         $this->hasAccess("account.expense.analysis.reports");
 
         $data = $this->dataService->getAccountData(['accountControls', 'accountSubsidiaries']);
-
         $data['accountSubsidiaries'] = AccountSubsidiary::query()
             ->where('account_control_id', $request->account_control_id)
             ->select('id', 'name')
@@ -171,8 +167,6 @@ class AccountReportController extends Controller
                         ->select(DB::Raw('SUM(amount)'));
                 }]);
             }])->get();
-
-
         $view = 'reports.balance-sheet.' . ($request->print ? 'print' : 'index');
 
         return view($view, $data);
@@ -183,7 +177,6 @@ class AccountReportController extends Controller
         $this->hasAccess("account.trial.balance.reports");
 
         $accountGroups = $this->transactionLedger->getCategoryWiseTransactionLedgerReportData($request);
-
         $view = 'reports.trial-balance.' . ($request->print ? 'print' : 'index');
 
         return view($view, compact('accountGroups'));

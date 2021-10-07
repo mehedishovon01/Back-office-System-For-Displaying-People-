@@ -58,7 +58,6 @@ class AccountControlController extends Controller
             ]);
         }
 
-
         return redirect()->route('account-controls.index')->with('message', 'Account Control Create Successful');
     }
 

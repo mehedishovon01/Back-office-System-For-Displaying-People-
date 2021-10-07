@@ -50,9 +50,7 @@ class AccountController extends Controller
         $this->hasAccess("accounts.create");
 
         $account = Account::query()->create($request->all());
-
         $account = $this->updateBalanceType($account);
-
         $this->updateOrCreateAccountTransaction($request, $account);
 
         return redirect()->route('accounts.index')->with('message', 'Account Create Successful');
@@ -63,9 +61,7 @@ class AccountController extends Controller
         $this->hasAccess("accounts.edit");
 
         $data = $this->dataService->getAccountData(['accountGroups']);
-
         $data['accountControls'] = $this->dataService->accountControls($account->account_group_id);
-
         $data['accountSubsidiaries'] = $this->dataService->accountSubsidiaries($account->account_control_id);
 
         return view('setup.accounts.edit', compact('account'), $data);
@@ -76,9 +72,7 @@ class AccountController extends Controller
         $this->hasAccess("accounts.edit");
 
         $account->update($request->all());
-
         $account = $this->updateBalanceType($account);
-
         $this->updateOrCreateAccountTransaction($request, $account);
 
         return redirect()->route('accounts.index')->with('message', 'Account Update Successful');
@@ -86,12 +80,14 @@ class AccountController extends Controller
 
     private function updateOrCreateAccountTransaction($request, $account)
     {
-        Transaction::updateOrCreate([
+        Transaction::updateOrCreate(
+        [
             'account_id'            => $account->id,
             'transactionable_type'  => 'Account Opening',
             'transactionable_id'    => $account->id,
             'description'           => 'Opening Balance',
-        ], [
+        ], 
+        [
             'date'                  => fdate($account->created_at),
             'amount'                => $account->opening_balance,
             'balance_type'          => $account->balance_type,
@@ -105,7 +101,6 @@ class AccountController extends Controller
 
         try {
             Account::destroy($id);
-
             return redirect()->route('accounts.index')->with('message', 'Account Successfully Deleted!');
         } catch (\Exception $ex) {
             return redirect()->back()->withMessage($ex->getMessage());

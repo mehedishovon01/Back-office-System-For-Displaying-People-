@@ -45,7 +45,6 @@ class CollectionController extends Controller
     {
         $this->hasAccess("acc_collections.edit");
 
-
         return redirect()->route('acc_collections.index')->with('message', 'Collection Update Successful');
     }
 

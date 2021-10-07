@@ -32,7 +32,6 @@ class UnitController extends Controller
         $this->hasAccess("units.create");
 
         $request->validate([ 'name' => 'required']);
-
         Unit::create($request->all());
 
         return redirect()->route('units.index')->with('message', 'Unit Create Successful');
@@ -42,7 +41,6 @@ class UnitController extends Controller
     {
         $this->hasAccess("units.edit");
 
-
         return view('product.units.edit', compact('unit'));
     }
 
@@ -51,7 +49,6 @@ class UnitController extends Controller
         $this->hasAccess("units.edit");
 
         $request->validate([ 'name' => 'required']);
-
         $unit->update(['name' => $request->name]);
 
         return redirect()->route('units.index')->with('message', 'Unit Update Successful');

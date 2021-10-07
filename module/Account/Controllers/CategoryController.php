@@ -24,7 +24,6 @@ class CategoryController extends Controller
     {
         $this->hasAccess("categories.create");
 
-
         return view('product.categories.create');
     }
 
@@ -42,14 +41,12 @@ class CategoryController extends Controller
     {
         $this->hasAccess("categories.edit");
 
-
         return view('product.categories.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category): RedirectResponse
     {
         $this->hasAccess("categories.edit");
-
 
         $request->validate(['name' => 'required']);
         $category->update(['name' => $request->name]);
